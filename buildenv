@@ -1,0 +1,131 @@
+# bump: p7zip-version /P7ZIP_VERSION="(.*)"/ git:https://github.com/p7zip-project/p7zip.git|*
+P7ZIP_VERSION="17.06"
+
+###
+### Build control file for the p7zip port
+###
+
+###
+### Required Environment Variables
+###
+export ZOPEN_BUILD_LINE="STABLE"
+export ZOPEN_STABLE_URL="https://github.com/p7zip-project/p7zip/archive/refs/tags/v${P7ZIP_VERSION}.tar.gz"
+export ZOPEN_STABLE_DEPS="make xxhash"
+export ZOPEN_DEV_URL=""
+export ZOPEN_DEV_DEPS="make"
+export ZOPEN_CATEGORIES="compression utilities"
+export ZOPEN_RUNTIME_DEPS=""
+# export ZOPEN_SYSTEM_PREREQ="zos25" # optional system pre-req (default=zos25)
+
+
+###
+### Build settings (Port type: BUILD, Build system: GNU Make)
+###
+# p7zip doesn't use autoconf/configure
+export ZOPEN_CONFIGURE="skip"
+export ZOPEN_MAKE_MINIMAL=Y
+export ZOPEN_MAKE_OPTS="all3 -j\${ZOPEN_NUM_JOS} ALLFLAGS_C=\"\${ALLFLAGS_C}\" ALLFLAGS_CPP=\"\${ALLFLAGS_CPP}\" LDFLAGS=\"\${LDFLAGS}\" LIBS=\"\${LIBS}\""
+export ZOPEN_INSTALL_OPTS="DEST_HOME=\$ZOPEN_INSTALL_DIR install"
+
+
+###
+### Required user-supplied functions
+###
+zopen_pre_patch() {
+  export ALLFLAGS_C="$CPPFLAGS $CFLAGS"
+  export ALLFLAGS_CPP="$CPPFLAGS $CXXFLAGS"
+}
+
+zopen_init() {
+  cp makefile.zos makefile.machine
+}
+
+zopen_check_results() {
+  dir="$1" 
+  pfx="$2" 
+  chk="$1/$2_check.log"
+  # Add logic to extract the test results here:
+  echo "actualFailures:0" 
+  echo "totalTests:1" 
+  echo "expectedFailures:0"
+  echo "expectedTotalTests:1"
+}
+
+zopen_get_version() {
+  echo "$P7ZIP_VERSION"
+}
+
+
+###
+### Custom Build Logic (if applicable)
+###
+# For libraries, this hook exports variables for other ports to use.
+#zopen_append_to_env() {
+#  cat <<END
+#if [ ! -z "\$ZOPEN_IN_ZOPEN_BUILD" ]; then
+#  export ZOPEN_EXTRA_LDFLAGS="\${ZOPEN_EXTRA_LDFLAGS} -L\${PWD}/lib/p7zip"
+#  export ZOPEN_EXTRA_LIBS="\${ZOPEN_EXTRA_LIBS} -l7z"
+#fi
+#END
+#}
+
+###
+### Optional User-Supplied Hooks (uncomment to use)
+###
+
+#zopen_append_to_env() {
+#  ## This function runs as part of generation of the .env file. The output of the
+#  ## function is appended to .env.
+#}
+#
+#zopen_append_to_setup(){
+#  ## This function runs as part of generation of the setup.sh file. The output of
+#  ## the function is appended to setup.sh.
+#}
+#
+#zopen_append_to_validate_install(){
+#  ## This function runs as part of generation of the install_test.sh file. The
+#  ## output of the function is appended to install_test.sh script.
+#}
+#
+#zopen_install_caveats(){
+#  ## This function is run post install. All stdout messages are captured and
+#  ## added to the metadata.json as installation caveats.
+#}
+#
+#zopen_init(){
+#  ## This function runs after code is downloaded and patched but before the code
+#  ## is built.
+#}
+#
+#zopen_post_buildenv(){
+#  ## This function runs after the 'buildenv' is processed.
+#}
+#
+#zopen_pre_build(){
+#  ## This function runs before the 'make' step of the build is run.
+#}
+#
+#zopen_pre_check(){
+#  ## This function runs before the 'check' step of the build is run.
+#}
+#
+#zopen_pre_configure(){
+#  ## This function runs before the 'configure' step of the build is run.
+#}
+#
+#zopen_pre_install(){
+#  ## This function runs before the 'install' step of the build is run.
+#}
+#
+#zopen_post_install(){
+#  ## This function runs after the 'install' step of the build is run.
+#}
+#
+#zopen_pre_patch(){
+#  ## This function runs before the 'patch' step of the build is run.
+#}
+#
+#zopen_pre_terminate(){
+#  ## This function runs before 'zopen build' terminates.
+#}

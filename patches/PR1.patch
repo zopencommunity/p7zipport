@@ -1,0 +1,126 @@
+diff --git c/C/Threads.c w/C/Threads.c
+index 7f62ef2..553c345 100644
+--- c/C/Threads.c
++++ w/C/Threads.c
+@@ -228,7 +228,11 @@ WRes Thread_Close(CThread *thread)
+     if (!thread->_created) return SZ_OK;
+     
+     pthread_detach(thread->_tid);
++#ifdef __MVS__
++    thread->_tid.__ = 0;
++#else
+     thread->_tid = 0;
++#endif
+     thread->_created = 0;
+     return SZ_OK;
+ }
+diff --git c/C/hashes/hash.h w/C/hashes/hash.h
+index 3abf275..5084b25 100644
+--- c/C/hashes/hash.h
++++ w/C/hashes/hash.h
+@@ -42,17 +42,7 @@
+ 
+ #include "../7zTypes.h"
+ 
+-#ifndef _UINT32_T_DECLARED
+-typedef UInt32 uint32_t;
+-#define _UINT32_T_DECLARED
+-#endif
+-
+-#ifndef _UINT64_T_DECLARED
+-typedef UInt64 uint64_t;
+-#define _UINT64_T_DECLARED
+-#endif
+-
+-//#include <stdint.h>
++#include <stdint.h>
+ 
+ #ifndef min
+ #define min(a,b) (((a)>(b))?(b):(a))
+diff --git c/makefile.linux_any_cpu w/makefile.linux_any_cpu
+deleted file mode 100644
+index 9e34c34..0000000
+--- c/makefile.linux_any_cpu
++++ /dev/null
+@@ -1,23 +0,0 @@
+-#
+-# makefile for Linux (x86, PPC, alpha ...)
+-#
+-
+-OPTFLAGS=-O -s
+-
+-ALLFLAGS=${OPTFLAGS} -pipe \
+-    	-D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE \
+-	-DNDEBUG -D_REENTRANT -DENV_UNIX \
+-	-D_7ZIP_LARGE_PAGES \
+-	$(LOCAL_FLAGS)
+-
+-CXX=g++
+-CC=gcc
+-CC_SHARED=-fPIC
+-LINK_SHARED=-fPIC -shared
+-
+-LOCAL_LIBS=-lpthread
+-LOCAL_LIBS_DLL=$(LOCAL_LIBS) -ldl
+-
+-OBJ_CRC32=$(OBJ_CRC32_C)
+-OBJ_AES=
+-
+diff --git c/makefile.machine w/makefile.machine
+index a89b568..072bdbe 100644
+--- c/makefile.machine
++++ w/makefile.machine
+@@ -1,23 +1,17 @@
+ #
+-# makefile for Linux (x86, PPC, alpha ...)
++# makefile for Linux (IBM z/Series Mainframe with s390x CPU)
+ #
+ 
+-OPTFLAGS=-O2 -s
+-#OPTFLAGS=-O0 -ggdb
+-
+-ALLFLAGS=${OPTFLAGS} -pipe \
+-    	-D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE \
++ALLFLAGS= \
++	-D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE \
+ 	-DNDEBUG -D_REENTRANT -DENV_UNIX \
+ 	-D_7ZIP_LARGE_PAGES \
+ 	$(LOCAL_FLAGS)
+ 
+-CXX=g++
+-CC=gcc
+-CC_SHARED=-fPIC
+-LINK_SHARED=-fPIC -shared
++CC_SHARED=
++LINK_SHARED=
+ 
+-LOCAL_LIBS=-lpthread
+-LOCAL_LIBS_DLL=$(LOCAL_LIBS) -ldl
++LOCAL_LIBS_DLL=$(LOCAL_LIBS) 
+ 
+ OBJ_CRC32=$(OBJ_CRC32_C)
+ OBJ_AES=
+diff --git c/makefile.zos w/makefile.zos
+new file mode 100644
+index 0000000..072bdbe
+--- /dev/null
++++ w/makefile.zos
+@@ -0,0 +1,18 @@
++#
++# makefile for Linux (IBM z/Series Mainframe with s390x CPU)
++#
++
++ALLFLAGS= \
++	-D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE \
++	-DNDEBUG -D_REENTRANT -DENV_UNIX \
++	-D_7ZIP_LARGE_PAGES \
++	$(LOCAL_FLAGS)
++
++CC_SHARED=
++LINK_SHARED=
++
++LOCAL_LIBS_DLL=$(LOCAL_LIBS) 
++
++OBJ_CRC32=$(OBJ_CRC32_C)
++OBJ_AES=
++
