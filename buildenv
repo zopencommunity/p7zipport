@@ -10,9 +10,9 @@ P7ZIP_VERSION="17.06"
 ###
 export ZOPEN_BUILD_LINE="STABLE"
 export ZOPEN_STABLE_URL="https://github.com/p7zip-project/p7zip/archive/refs/tags/v${P7ZIP_VERSION}.tar.gz"
-export ZOPEN_STABLE_DEPS="make xxhash"
+export ZOPEN_STABLE_DEPS="make xxhash coreutils zstd zip gzip bzip2"
 export ZOPEN_DEV_URL=""
-export ZOPEN_DEV_DEPS="make"
+export ZOPEN_DEV_DEPS="make xxhash coreutils zstd zip gzip bzip2"
 export ZOPEN_CATEGORIES="compression utilities"
 export ZOPEN_RUNTIME_DEPS=""
 # export ZOPEN_SYSTEM_PREREQ="zos25" # optional system pre-req (default=zos25)
@@ -24,7 +24,7 @@ export ZOPEN_RUNTIME_DEPS=""
 # p7zip doesn't use autoconf/configure
 export ZOPEN_CONFIGURE="skip"
 export ZOPEN_MAKE_MINIMAL=Y
-export ZOPEN_MAKE_OPTS="all3 -j\${ZOPEN_NUM_JOS} ALLFLAGS_C=\"\${ALLFLAGS_C}\" ALLFLAGS_CPP=\"\${ALLFLAGS_CPP}\" LDFLAGS=\"\${LDFLAGS}\" LIBS=\"\${LIBS}\""
+export ZOPEN_MAKE_OPTS="7za -j\${ZOPEN_NUM_JOS} ALLFLAGS_C=\"\${ALLFLAGS_C}\" ALLFLAGS_CPP=\"\${ALLFLAGS_CPP}\" LDFLAGS=\"\${LDFLAGS}\" LIBS=\"\${LIBS}\""
 export ZOPEN_INSTALL_OPTS="DEST_HOME=\$ZOPEN_INSTALL_DIR install"
 
 
