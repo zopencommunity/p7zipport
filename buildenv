@@ -24,8 +24,9 @@ export ZOPEN_RUNTIME_DEPS=""
 # p7zip doesn't use autoconf/configure
 export ZOPEN_CONFIGURE="skip"
 export ZOPEN_MAKE_MINIMAL=Y
-export ZOPEN_MAKE_OPTS="7za -j\${ZOPEN_NUM_JOS} ALLFLAGS_C=\"\${ALLFLAGS_C}\" ALLFLAGS_CPP=\"\${ALLFLAGS_CPP}\" LDFLAGS=\"\${LDFLAGS}\" LIBS=\"\${LIBS}\""
+export ZOPEN_MAKE_OPTS="7za -j\${ZOPEN_NUM_JOBS} ALLFLAGS_C=\"\${ALLFLAGS_C}\" ALLFLAGS_CPP=\"\${ALLFLAGS_CPP}\" LDFLAGS=\"\${LDFLAGS}\" LIBS=\"\${LIBS}\""
 export ZOPEN_INSTALL_OPTS="DEST_HOME=\$ZOPEN_INSTALL_DIR install"
+export ZOPEN_CHECK="skip"
 
 
 ###
